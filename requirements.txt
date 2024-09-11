@@ -6,6 +6,6 @@ numpy
 scikit-learn
 imblearn
 scipy
-cv2
+# cv2
 pylance
 opencv-python
