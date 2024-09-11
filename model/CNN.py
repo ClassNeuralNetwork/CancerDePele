@@ -102,102 +102,102 @@ np.save('train_data/y_test.npy', y_test)
 
 print(f"Conjunto de treinamento: {len(X_train)}, Conjunto de teste: {len(X_test)}")
 
-# # Criar listas vazias para armazenar as amostras balanceadas
-# balanced_X_train = []
-# balanced_y_train = []
+# Criar listas vazias para armazenar as amostras balanceadas
+balanced_X_train = []
+balanced_y_train = []
 
-# # Determinar o número de amostras na classe majoritária
-# majority_samples = 1000
+# Determinar o número de amostras na classe majoritária
+majority_samples = 1000
 
-# # Iterar sobre cada classe
-# for class_label in np.unique(np.argmax(y_train, axis=1)):
-#     # Filtrar amostras pertencentes a essa classe
-#     X_class = X_train[np.argmax(y_train, axis=1) == class_label]
-#     y_class = y_train[np.argmax(y_train, axis=1) == class_label]
+# Iterar sobre cada classe
+for class_label in np.unique(np.argmax(y_train, axis=1)):
+    # Filtrar amostras pertencentes a essa classe
+    X_class = X_train[np.argmax(y_train, axis=1) == class_label]
+    y_class = y_train[np.argmax(y_train, axis=1) == class_label]
 
-#     # Balancear as amostras aumentando a classe menos representada
-#     balanced_X_class, balanced_y_class = resample(X_class, y_class, replace=True, n_samples=majority_samples, random_state=42)
+    # Balancear as amostras aumentando a classe menos representada
+    balanced_X_class, balanced_y_class = resample(X_class, y_class, replace=True, n_samples=majority_samples, random_state=42)
 
-#     # Adicionar amostras balanceadas à lista
-#     balanced_X_train.extend(balanced_X_class)
-#     balanced_y_train.extend(balanced_y_class)
+    # Adicionar amostras balanceadas à lista
+    balanced_X_train.extend(balanced_X_class)
+    balanced_y_train.extend(balanced_y_class)
 
-# # Converter listas em arrays numpy
-# balanced_X_train = np.array(balanced_X_train)
-# balanced_y_train = np.array(balanced_y_train)
+# Converter listas em arrays numpy
+balanced_X_train = np.array(balanced_X_train)
+balanced_y_train = np.array(balanced_y_train)
 
-# # Embaralhar amostras
-# shuffled_indices = np.arange(len(balanced_X_train))
-# np.random.shuffle(shuffled_indices)
-# balanced_X_train = balanced_X_train[shuffled_indices]
-# balanced_y_train = balanced_y_train[shuffled_indices]
+# Embaralhar amostras
+shuffled_indices = np.arange(len(balanced_X_train))
+np.random.shuffle(shuffled_indices)
+balanced_X_train = balanced_X_train[shuffled_indices]
+balanced_y_train = balanced_y_train[shuffled_indices]
 
-# # Verificar o tamanho dos conjuntos de dados balanceados
-# print(f"Tamanho do conjunto de treinamento balanceado: {len(balanced_X_train)}")
-# print(f"Tamanho do conjunto de teste: {len(X_test)}")
+# Verificar o tamanho dos conjuntos de dados balanceados
+print(f"Tamanho do conjunto de treinamento balanceado: {len(balanced_X_train)}")
+print(f"Tamanho do conjunto de teste: {len(X_test)}")
 
-# for class_label in np.unique(np.argmax(balanced_y_train, axis=1)):
-#     count = np.sum(np.argmax(balanced_y_train, axis=1) == class_label)
-#     print(f"Classe {class_label}: {count} amostras")
+for class_label in np.unique(np.argmax(balanced_y_train, axis=1)):
+    count = np.sum(np.argmax(balanced_y_train, axis=1) == class_label)
+    print(f"Classe {class_label}: {count} amostras")
 
-# from keras.layers import (BatchNormalization, Conv2D, Dense, Dropout, Flatten,
-#                           MaxPooling2D)
-# from keras.models import Sequential
+from keras.layers import (BatchNormalization, Conv2D, Dense, Dropout, Flatten,
+                          MaxPooling2D)
+from keras.models import Sequential
 
-# # Criar o modelo
-# model = Sequential()
+# Criar o modelo
+model = Sequential()
 
-# model.add(BatchNormalization(input_shape=(image_height, image_width, 1)))
-# # model.add(Conv2D(512, (3,3), padding='same', activation='relu'))
-# # model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
-# # model.add(Dropout(0.2))  # Adiciona a camada de dropout
-
-# model.add(Conv2D(8, (3,3), padding='same', activation='relu'))
+model.add(BatchNormalization(input_shape=(image_height, image_width, 1)))
+# model.add(Conv2D(512, (3,3), padding='same', activation='relu'))
 # model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
 # model.add(Dropout(0.2))  # Adiciona a camada de dropout
 
-# # model.add(Conv2D(128, (3, 3), padding='same', activation='relu'))
-# # model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
-# # model.add(Dropout(0.2))  # Adiciona a camada de dropout
+model.add(Conv2D(64, (3,3), padding='same', activation='relu'))
+model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+model.add(Dropout(0.2))  # Adiciona a camada de dropout
 
-# # model.add(Conv2D(64, (3,3), padding='same', activation='relu'))
-# # model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
-# # model.add(Dropout(0.2))  # Adiciona a camada de dropout
+model.add(Conv2D(32, (3, 3), padding='same', activation='relu'))
+model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+model.add(Dropout(0.2))  # Adiciona a camada de dropout
 
-# model.add(Flatten())
-# model.add(Dense(4, activation='relu'))
+# model.add(Conv2D(64, (3,3), padding='same', activation='relu'))
+# model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
 # model.add(Dropout(0.2))  # Adiciona a camada de dropout
-# model.add(Dense(7, activation='softmax'))  # Especifica 'softmax' como a função de ativação
+
+model.add(Flatten())
+model.add(Dense(16, activation='relu'))
+model.add(Dropout(0.2))  # Adiciona a camada de dropout
+model.add(Dense(7, activation='softmax'))  # Especifica 'softmax' como a função de ativação
 
 
-# model.summary()
+model.summary()
 
-# from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.optimizers import Adam
 
-# optimizer = Adam(learning_rate=0.001)
-# model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=['accuracy'])
+optimizer = Adam(learning_rate=0.001)
+model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=['accuracy'])
     
     
-# # Treinando o modelo
-# from tensorflow.keras.callbacks import EarlyStopping
+# Treinando o modelo
+from tensorflow.keras.callbacks import EarlyStopping
 
-# # Configurar EarlyStopping
-# early_stopping = EarlyStopping(monitor='val_loss', patience=20)
+# Configurar EarlyStopping
+early_stopping = EarlyStopping(monitor='val_loss', patience=20)
 
-# # Treinar o modelo
-# history = model.fit(balanced_X_train, balanced_y_train,validation_split= 0.2, epochs=150, callbacks=[early_stopping], batch_size=64)
+# Treinar o modelo
+history = model.fit(balanced_X_train, balanced_y_train,validation_split= 0.2, epochs=150, callbacks=[early_stopping], batch_size=64)
 
-# import pandas as pd
+import pandas as pd
 
-# history_salvo = pd.DataFrame(history.history)
-# history_salvo.to_csv('history_salvo90valAcc.csv')
+history_salvo = pd.DataFrame(history.history)
+history_salvo.to_csv('history_salvo90valAcc.csv')
      
 
-# # save model structure in jason file
-# model_json = model.to_json()
-# with open("emotion_modelcnn90valAcc.json", "w") as json_file:
-#     json_file.write(model_json)
+# save model structure in jason file
+model_json = model.to_json()
+with open("emotion_modelcnn90valAcc.json", "w") as json_file:
+    json_file.write(model_json)
      
 
-# model.save('modelo_cnn90valAcc.h5')
+model.save('modelo_cnn90valAcc.h5')
      
